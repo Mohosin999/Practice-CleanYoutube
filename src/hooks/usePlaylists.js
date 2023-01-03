@@ -15,62 +15,28 @@ const usePlaylists = () => {
    * @param {string} playlistId - you must give playlistId as a string
    * @param {boolean} force - It's default value is false
    */
-  const getPlaylistId = async (playlistId, force = false) => {
+  const getPlaylistById = async (playlistId, force = false) => {
     if (state.playlists[playlistId] && !force) {
       return;
     }
 
     setLoading(true);
-    let result;
 
     try {
-      result = await getPlaylist(playlistId);
+      const playlist = getPlaylist(playlistId);
       setError("");
+      setState((prev) => ({
+        ...prev,
+        playlists: {
+          ...prev.playlists,
+          [playlistId]: playlist,
+        },
+      }));
     } catch (e) {
       setError(e.response?.data?.error?.message || "Something Went Wrong");
     } finally {
       setLoading(false);
     }
-
-    let cid, ct;
-
-    result = result.map((item) => {
-      const {
-        channelId,
-        title,
-        description,
-        thumbnails: { medium },
-        channelTitle,
-      } = item.snippet;
-
-      if (!cid) {
-        cid = channelId;
-      }
-
-      if (!ct) {
-        ct = channelTitle;
-      }
-
-      return {
-        title,
-        description,
-        thumbnails: medium,
-        contentDetails: item.contentDetails,
-      };
-    });
-
-    setState((prev) => ({
-      ...prev,
-      playlists: {
-        ...prev.playlists,
-        [playlistId]: {
-          items: result,
-          playlistId: playlistId,
-          channelId: cid,
-          channelTitle: ct,
-        },
-      },
-    }));
   };
 
   /**
@@ -105,7 +71,7 @@ const usePlaylists = () => {
     favorite: getPlaylistsByIds(state.favorite),
     error,
     loading,
-    getPlaylistId,
+    getPlaylistById,
     addToRecent,
     addToFavorite,
   };

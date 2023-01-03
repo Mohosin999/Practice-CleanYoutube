@@ -1,4 +1,5 @@
-import * as React from "react";
+import React from "react";
+import { useState } from "react";
 import AppBar from "@mui/material/AppBar";
 import Box from "@mui/material/Box";
 import Toolbar from "@mui/material/Toolbar";
@@ -13,8 +14,23 @@ import MenuItem from "@mui/material/MenuItem";
 import Menu from "@mui/material/Menu";
 import { Stack } from "@mui/system";
 import { Button, Container } from "@mui/material";
+import PlaylistForm from "../playlist-form";
 
-const Navbar = () => {
+const Navbar = ({ getPlaylistById }) => {
+  const [open, setOpen] = useState(false);
+
+  const handleClickOpen = () => {
+    setOpen(true);
+  };
+
+  const handleClose = () => {
+    setOpen(false);
+  };
+
+  const getPlaylistId = (playlistId) => {
+    getPlaylistById(playlistId);
+  };
+
   return (
     <Box sx={{ flexGrow: 1 }}>
       <AppBar position="fixed" color="default" sx={{ py: 2 }}>
@@ -24,7 +40,14 @@ const Navbar = () => {
               <Typography variant="h4">Clean YouTube</Typography>
               <Typography variant="body1">By Stack Learner</Typography>
             </Stack>
-            <Button variant="contained">Add Playlist</Button>
+            <Button variant="contained" onClick={handleClickOpen}>
+              Add Playlist
+            </Button>
+            <PlaylistForm
+              open={open}
+              handleClose={handleClose}
+              getPlaylistId={getPlaylistId}
+            />
           </Toolbar>
         </Container>
       </AppBar>
