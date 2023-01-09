@@ -10,11 +10,6 @@ const usePlaylists = () => {
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
 
-  /**
-   * Get videos by playlistId
-   * @param {string} playlistId - you must give playlistId as a string
-   * @param {boolean} force - It's default value is false
-   */
   const getPlaylistById = async (playlistId, force = false) => {
     if (state.playlists[playlistId] && !force) {
       return;
@@ -39,10 +34,6 @@ const usePlaylists = () => {
     }
   };
 
-  /**
-   * Add to recentPlaylists
-   * @param {string} playlistId - you must give playlistId as a string
-   */
   const addToRecent = (playlistId) => {
     setState((prev) => ({
       ...prev,
@@ -50,10 +41,6 @@ const usePlaylists = () => {
     }));
   };
 
-  /**
-   * Add to favorite
-   * @param {string} playlistId - you must give playlistId as a string
-   */
   const addToFavorite = (playlistId) => {
     setState((prev) => ({
       ...prev,

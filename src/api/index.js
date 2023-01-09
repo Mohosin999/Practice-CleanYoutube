@@ -1,12 +1,5 @@
 import axios from "axios";
 
-/**
- * Get specific playlist by given id
- * @param {string} playlistId - You must give playlistId as a string
- * @param {string} pageToken - You must give pageToken as a string
- * @param {Array} result - Result is a list of array
- * @returns - This function will returns a promise
- */
 const key = import.meta.env.VITE_YOUTUBE_API_KEY;
 
 const getPlaylistItem = async (playlistId, pageToken = "", result = []) => {
