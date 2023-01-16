@@ -1,15 +1,38 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import getPlaylist from "../api";
+import storage from "../utils/Storage";
+
+const STORAGE_KEY = "cy__playlist__state";
+
+const INIT_STATE = {
+  playlists: {},
+  recentPlaylists: [],
+  favorite: [],
+};
 
 const usePlaylists = () => {
-  const [state, setState] = useState({
-    playlists: {},
-    recentPlaylists: [],
-    favorite: [],
-  });
+  const [state, setState] = useState(INIT_STATE);
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
 
+  useEffect(() => {
+    const state = storage.get(STORAGE_KEY);
+    if (state) {
+      setState({ ...state });
+    }
+  }, []);
+
+  useEffect(() => {
+    if (state !== INIT_STATE) {
+      storage.save(STORAGE_KEY, state);
+    }
+  }, [state]);
+
+  /**
+   * Get videos by playlistId
+   * @param {string} playlistId - you must give playlistId as a string
+   * @param {boolean} force - It's default value is false
+   */
   const getPlaylistById = async (playlistId, force = false) => {
     if (state.playlists[playlistId] && !force) {
       return;
@@ -18,7 +41,7 @@ const usePlaylists = () => {
     setLoading(true);
 
     try {
-      const playlist = getPlaylist(playlistId);
+      const playlist = await getPlaylist(playlistId);
       setError("");
       setState((prev) => ({
         ...prev,
@@ -34,6 +57,10 @@ const usePlaylists = () => {
     }
   };
 
+  /**
+   * Add to recentPlaylists
+   * @param {string} playlistId - you must give playlistId as a string
+   */
   const addToRecent = (playlistId) => {
     setState((prev) => ({
       ...prev,
@@ -41,6 +68,10 @@ const usePlaylists = () => {
     }));
   };
 
+  /**
+   * Add to favorite
+   * @param {string} playlistId - you must give playlistId as a string
+   */
   const addToFavorite = (playlistId) => {
     setState((prev) => ({
       ...prev,

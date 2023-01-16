@@ -1,17 +1,11 @@
 import React from "react";
+import { Link as RouterLink } from "react-router-dom";
 import { useState } from "react";
 import AppBar from "@mui/material/AppBar";
+import Link from "@mui/material/Link";
 import Box from "@mui/material/Box";
 import Toolbar from "@mui/material/Toolbar";
 import Typography from "@mui/material/Typography";
-import IconButton from "@mui/material/IconButton";
-import MenuIcon from "@mui/icons-material/Menu";
-import AccountCircle from "@mui/icons-material/AccountCircle";
-import Switch from "@mui/material/Switch";
-import FormControlLabel from "@mui/material/FormControlLabel";
-import FormGroup from "@mui/material/FormGroup";
-import MenuItem from "@mui/material/MenuItem";
-import Menu from "@mui/material/Menu";
 import { Stack } from "@mui/system";
 import { Button, Container } from "@mui/material";
 import PlaylistForm from "../playlist-form";
@@ -34,11 +28,23 @@ const Navbar = ({ getPlaylistById }) => {
   return (
     <Box sx={{ flexGrow: 1 }}>
       <AppBar position="fixed" color="default" sx={{ py: 2 }}>
-        <Container maxWidth="lg">
+        <Container maxWidth={"lg"}>
           <Toolbar>
             <Stack sx={{ flexGrow: 1 }}>
-              <Typography variant="h4">Clean YouTube</Typography>
-              <Typography variant="body1">By Stack Learner</Typography>
+              <Link
+                to="/"
+                component={RouterLink}
+                sx={{ textDecoration: "none", color: "#000" }}
+              >
+                <Typography variant="h4">Clean YouTube</Typography>
+              </Link>
+              <Link
+                href="https://www.stacklearner.com"
+                target={"_blank"}
+                sx={{ textDecoration: "none", color: "#000" }}
+              >
+                <Typography variant="body1">By Stack Learner</Typography>
+              </Link>
             </Stack>
             <Button variant="contained" onClick={handleClickOpen}>
               Add Playlist
