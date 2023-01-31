@@ -29,14 +29,14 @@ part=snippet&id=${playlistId}&key=${key}`;
     thumbnails,
     channelId,
     channelTitle,
-  } = data?.items[0]?.snippet; // this informations for Playlist
+  } = data?.items[0]?.snippet;
 
   playlistItems = playlistItems.map((item) => {
     const {
       title,
       description,
       thumbnails: { medium },
-    } = item.snippet; // this informations for every single video
+    } = item.snippet;
 
     return {
       title,

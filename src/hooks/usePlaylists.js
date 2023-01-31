@@ -11,7 +11,7 @@ const usePlaylists = () => {
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
 
-  const getPlaylistId = async (playlistId, force = false) => {
+  const getPlaylistById = async (playlistId, force = false) => {
     if (state.playlists[playlistId] && !force) {
       return;
     }
@@ -57,7 +57,7 @@ const usePlaylists = () => {
     playlists: state.playlists,
     recentPlaylists: getPlaylistsByIds(state.recentPlaylists),
     favorite: getPlaylistsByIds(state.favorite),
-    getPlaylistId,
+    getPlaylistById,
     addToRecent,
     addToFavorite,
     error,
