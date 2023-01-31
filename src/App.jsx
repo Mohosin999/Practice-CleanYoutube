@@ -1,11 +1,19 @@
 import React from "react";
 import CssBaseline from "@mui/material/CssBaseline";
+import Navbar from "./components/navbar";
+import usePlaylists from "./hooks/usePlaylists";
 
 const App = () => {
+  const { playlists, error, getPlaylistById } = usePlaylists();
+  console.log(playlists);
+  console.log(error);
+
   return (
     <>
       <CssBaseline />
-      <h2>I am app</h2>
+      <div>
+        <Navbar getPlaylistById={getPlaylistById} />
+      </div>
     </>
   );
 };
