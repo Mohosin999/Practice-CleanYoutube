@@ -6,6 +6,7 @@ import CardActions from "@mui/material/CardActions";
 import Typography from "@mui/material/Typography";
 import { Button } from "@mui/material";
 import { PlayCircleOutline } from "@mui/icons-material";
+import { Box, Stack } from "@mui/system";
 
 const PlaylistCardItem = ({
   playlistThumbnail,
@@ -13,7 +14,14 @@ const PlaylistCardItem = ({
   channelTitle,
 }) => {
   return (
-    <Card sx={{ maxWidth: 345 }}>
+    <Card
+      sx={{
+        height: "100%",
+        display: "flex",
+        flexDirection: "column",
+        margin: 1,
+      }}
+    >
       <CardMedia
         component="img"
         image={playlistThumbnail.url}
@@ -21,16 +29,25 @@ const PlaylistCardItem = ({
       />
       <CardContent>
         <Typography variant="h6" color="text.primary">
-          {playlistTitle}
+          {`${
+            playlistTitle.length > 50
+              ? playlistTitle.substr(0, 50) + "..."
+              : playlistTitle
+          }`}
         </Typography>
         <Typography variant="body2" color="text.secondary">
           {channelTitle}
         </Typography>
       </CardContent>
+      <Box sx={{ flexGrow: 1 }}></Box>
       <CardActions disableSpacing>
         <Button>
-          <PlayCircleOutline />
-          Play
+          <Stack direction={"row"} spacing={1} alignItems={"center"}>
+            <PlayCircleOutline />
+            <Typography variant="body2" fontWeight={600}>
+              Start Tutorial
+            </Typography>
+          </Stack>
         </Button>
       </CardActions>
     </Card>
