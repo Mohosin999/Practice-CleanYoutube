@@ -16,4 +16,45 @@ const getPlaylistItem = async (playlistId, pageToken = "", result = []) => {
   return result;
 };
 
+const getPlaylist = async (playlistId) => {
+  const URL = `https://youtube.googleapis.com/youtube/v3/playlists?
+part=snippet&id=${playlistId}&key=${key}`;
+
+  const { data } = await axios.get(URL);
+  let playlistItems = await getPlaylistItem(playlistId);
+
+  const {
+    title: playlistTitle,
+    description: playlistDescription,
+    thumbnails,
+    channelId,
+    channelTitle,
+  } = data?.items[0]?.snippet; // this informations for Playlist
+
+  playlistItems = playlistItems.map((item) => {
+    const {
+      title,
+      description,
+      thumbnails: { medium },
+    } = item.snippet; // this informations for every single video
+
+    return {
+      title,
+      description,
+      thumbnails: medium,
+      contentDetails: item.contentDetails,
+    };
+  });
+
+  return {
+    playlistId,
+    playlistTitle,
+    playlistDescription,
+    playlistItems,
+    playlistThumbnail: thumbnails.default,
+    channelId,
+    channelTitle,
+  };
+};
+
 export default getPlaylist;
