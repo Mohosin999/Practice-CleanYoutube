@@ -15,6 +15,19 @@ const usePlaylists = () => {
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
 
+  useEffect(() => {
+    const state = storage.get(STORAGE_KEY);
+    if (state) {
+      setState({ ...state });
+    }
+  }, []);
+
+  useEffect(() => {
+    if (state !== INIT_STATE) {
+      storage.save(STORAGE_KEY, state);
+    }
+  }, [state]);
+
   const getPlaylistById = async (playlistId, force = false) => {
     if (state.playlists[playlistId] && !force) {
       return;
