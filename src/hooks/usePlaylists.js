@@ -1,12 +1,17 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import getPlaylist from "../api";
+import storage from "../utils/Storage";
+
+const STORAGE_KEY = "cy__playlist__state";
+
+const INIT_STATE = {
+  playlists: {},
+  recentPlaylists: [],
+  favorite: [],
+};
 
 const usePlaylists = () => {
-  const [state, setState] = useState({
-    playlists: {},
-    recentPlaylists: [],
-    favorite: [],
-  });
+  const [state, setState] = useState(INIT_STATE);
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
 
