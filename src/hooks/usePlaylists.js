@@ -1,13 +1,34 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import getPlaylist from "../api";
+import storage from "../utils/Storage";
+
+const STORAGE_KEY = "cy__playlist__state";
+
+const INIT_STATE = {
+  playlists: {},
+  recentPlaylists: [],
+  favorite: [],
+};
 
 const usePlaylists = () => {
-  const [state, setState] = useState({
-    playlists: {},
-  });
-
+  const [state, setState] = useState(INIT_STATE);
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
+
+  // to get data
+  useEffect(() => {
+    const state = storage.get(STORAGE_KEY);
+    if (state) {
+      setState({ ...state });
+    }
+  }, []);
+
+  // to save data
+  useEffect(() => {
+    if (state !== INIT_STATE) {
+      storage.save(STORAGE_KEY, state);
+    }
+  }, [state]);
 
   const getPlaylistById = async (playlistId, force = false) => {
     if (state.playlists[playlistId] && !force) {
@@ -27,13 +48,40 @@ const usePlaylists = () => {
         },
       }));
     } catch (e) {
-      console.log(e.response?.data?.error?.message || "Something Went Wrong");
+      setError(e.response?.data?.error?.message || "Something Went Wrong");
     } finally {
       setLoading(false);
     }
   };
 
-  return { getPlaylistById, playlists: state.playlists, error, loading };
+  //   const addToRecent = (playlistId) => {
+  //     setState((prev) => ({
+  //       ...prev,
+  //       recentPlaylists: [...prev, playlistId],
+  //     }));
+  //   };
+
+  //   const addToFavorite = (playlistId) => {
+  //     setState((prev) => ({
+  //       ...prev,
+  //       favorite: [...prev, playlistId],
+  //     }));
+  //   };
+
+  const getPlaylistsByIds = (ids = []) => {
+    return ids.map((id) => state.playlists[id]);
+  };
+
+  return {
+    playlists: state.playlists,
+    recentPlaylists: getPlaylistsByIds(state.recentPlaylists),
+    favorite: getPlaylistsByIds(state.favorite),
+    error,
+    loading,
+    getPlaylistById,
+    // addToRecent,
+    // addToFavorite,
+  };
 };
 
 export default usePlaylists;
