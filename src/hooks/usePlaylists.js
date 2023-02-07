@@ -6,15 +6,25 @@ const usePlaylists = () => {
     playlists: {},
   });
 
-  //   const [error, setError] = useState("");
-  //   const [loading, setLoading] = useState(false);
+  const [error, setError] = useState("");
+  const [loading, setLoading] = useState(false);
 
   const getPlaylistById = async (playlistId, force = false) => {
     if (state.playlists[playlistId] && !force) {
       return;
     }
 
-    let result = await getPlaylist(playlistId);
+    setLoading(true);
+    let result;
+
+    try {
+      result = await getPlaylist(playlistId);
+      setError("");
+    } catch (e) {
+      console.log(e.response?.data?.error?.message || "Something Went Wrong");
+    } finally {
+      setLoading(false);
+    }
 
     let cid, ct;
 
@@ -57,7 +67,7 @@ const usePlaylists = () => {
     }));
   };
 
-  return { getPlaylistById, playlists: state.playlists };
+  return { getPlaylistById, playlists: state.playlists, error, loading };
 };
 
 export default usePlaylists;
