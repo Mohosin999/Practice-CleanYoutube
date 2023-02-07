@@ -1,5 +1,5 @@
 import React from "react";
-import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { BrowserRouter, Routes, Route, useParams } from "react-router-dom";
 import CssBaseline from "@mui/material/CssBaseline";
 import Navbar from "./components/navbar";
 import usePlaylists from "./hooks/usePlaylists";
@@ -29,12 +29,18 @@ const HomePage = ({ playlistArray }) => {
   );
 };
 
-const PlayerPage = () => {
+const PlayerPage = ({ playlists }) => {
+  const { playlistId } = useParams();
+  const current = playlists[playlistId];
+
+  if (!current) return;
+
   return (
     <Container maxWidth={"lg"} sx={{ marginTop: 16 }}>
       <Typography variant="h2" align="center">
-        This is a Player Page
+        {current.playlistTitle}
       </Typography>
+      <Typography variant="body1">{current.playlistDescription}</Typography>
     </Container>
   );
 };
@@ -60,7 +66,10 @@ const App = () => {
       <Navbar getPlaylistById={getPlaylistById} />
       <Routes>
         <Route path="/" element={<HomePage playlistArray={playlistArray} />} />
-        <Route path="/player/:playlistId" element={<PlayerPage />} />
+        <Route
+          path="/player/:playlistId"
+          element={<PlayerPage playlists={playlists} />}
+        />
         <Route path="*" element={<NotFound />} />
       </Routes>
     </BrowserRouter>
