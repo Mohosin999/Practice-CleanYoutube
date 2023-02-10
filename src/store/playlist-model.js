@@ -1,7 +1,7 @@
-import { action, thunk } from "easy-peasy";
+import { action, thunk, persist } from "easy-peasy";
 import getPlaylist from "../api";
 
-const playlistModel = {
+const playlistModel = persist({
   items: [],
   id: "",
   title: "",
@@ -38,6 +38,6 @@ const playlistModel = {
       channelTitle,
     });
   }),
-};
+});
 
 export default playlistModel;
