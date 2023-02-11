@@ -2,42 +2,41 @@ import { action, thunk, persist } from "easy-peasy";
 import getPlaylist from "../api";
 
 const playlistModel = persist({
-  items: [],
-  id: "",
-  title: "",
-  description: "",
-  thumbnail: "",
-  channelId: "",
-  channelTitle: "",
-  // uporer ai data gulo update korte hole amader action create korte hobe
-  // jodio amra jani je asynchronous task handle korar jonne action perfect na
-  // but thunk abar sorasori data update korte pare na. Tai jodi amader asynchronous
-  // task thake tobe amader dui layere kajta korte hobe, (1) action, (2) thunk
-  setPlaylistData: action((state, payload) => {
-    state = { ...payload };
-    return state;
+  data: {},
+  error: "",
+  isLoading: false,
+  addPlaylist: action((state, payload) => {
+    state.data[payload.playlistId] = payload;
   }),
-  getPlaylistData: thunk(async ({ setPlaylistData }, payload) => {
-    const {
-      playlistId,
-      playlistTitle,
-      playlistDescription,
-      playlistItems,
-      playlistThumbnail,
-      channelId,
-      channelTitle,
-    } = await getPlaylist(payload);
-
-    setPlaylistData({
-      items: playlistItems,
-      id: playlistId,
-      title: playlistTitle,
-      description: playlistDescription,
-      thumbnail: playlistThumbnail,
-      channelId,
-      channelTitle,
-    });
+  setLoading: action((state, payload) => {
+    state.isLoading = payload;
   }),
+  setError: action((state, payload) => {
+    state.error = payload;
+  }),
+  // getPlaylist: thunk(async (actions, payload, helpers) => {
+  //   if (helpers.getState().data[payload]) {
+  //     return;
+  //   }
+  //   const playlist = await getPlaylist(payload);
+  //   actions.addPlaylist(playlist);
+  // }),
+  getPlaylist: thunk(
+    async ({ addPlaylist, setError, setLoading }, playlistId, { getState }) => {
+      if (getState().data[playlistId]) {
+        return;
+      }
+      setLoading(true);
+      try {
+        const playlist = await getPlaylist(playlistId);
+        addPlaylist(playlist);
+      } catch (e) {
+        setError(e.response?.data?.error?.message || "Something Went Wrong");
+      } finally {
+        setLoading(false);
+      }
+    }
+  ),
 });
 
 export default playlistModel;
