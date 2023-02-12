@@ -12,7 +12,7 @@ import { useEffect } from "react";
 const playlistId = "PL-J2q3Ga50oNQP__onO64kAHX_z0BdLv6";
 
 const HomePage = ({ playlistArray }) => {
-  const playlist = useStoreActions((actions) => actions.playlist);
+  const playlist = useStoreActions((actions) => actions.playlists);
 
   useEffect(() => {
     playlist.getPlaylist(playlistId);
